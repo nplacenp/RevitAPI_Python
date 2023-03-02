@@ -1,11 +1,15 @@
 #Dynamo Python Standard Imports:
-
 import sys
 import clr
+clr.AddReference('RevitAPI')
+clr.AddReference('RevitAPIUI')
+
+
 clr.AddReference('ProtoGeometry')
 from Autodesk.DesignScript.Geometry import *
 
-import Autodesk.Revit.DB as DB
+from  Autodesk.Revit.DB import *
+from Autodesk.Revit.UI import *
 
 clr.AddReference('RevitNodes')
 import Revit
@@ -18,13 +22,16 @@ from RevitServices.Transactions import TransactionManager
 
 clr.AddReference('System')
 from System.Collections.Generic import List
+
 #List creating
-whatever = List[DB.whatevertype]()
+
+#whatever = List[DB.whatevertype]()
 #always have to do whatever.Add(whatevertoadd)
 
 __________________________________________________________________________________
 
-doc = DocumentManager.Instance.CurrenDBDocument
+doc = DocumentManager.Instance.CurrentDBDocument
+active_view = doc.ActiveView
 
 #unwrapping
 something = UnwrapElement(IN[0])
@@ -32,16 +39,16 @@ something = UnwrapElement(IN[0])
 #converting back to dynamo (directShape)
 wrappedElement = familyInstance.ToDSType(False)
 
-quickFilter = DB.ElementCategoryFilter(DB.BuiltInCategory.OST_Stairs) #as an example
+quickFilter = ElementCategoryFilter(BuiltInCategory.OST_Stairs) #as an example
 
-DB.FilteredElementCollector(doc).WherePasses(quickfiltername).WhereElementIsNotElementType().ToElementIds()
+new_col = FilteredElementCollector(doc).WherePasses(quickFilter).WhereElementIsNotElementType().ToElementIds()
 
 __________________________________________________________________________________
 
 TransactionManager.Instance.EnsureInTransaction(doc)
 
 for whatever in whatever:
-    newWhatevers = DB.Architecture.Something.Create(doc, etc)
+    newWhatevers = Architecture.Something.Create(doc, etc)
 
 TransactionManager.Instance.TransactionTaskDone()
 
